@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Sender</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        input, textarea, button {
+            width: 100%;
+            margin-bottom: 12px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        input:focus, textarea:focus {
+            border-color: #007BFF;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+        }
+        textarea {
+            resize: none;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s ease-in-out;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .loader {
+            display: none;
+            margin: 0 auto 10px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007BFF;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #message {
+            font-size: 14px;
+            margin-top: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Send Email</h2>
+        <input type="email" id="receiver_email" placeholder="Receiver Email" required>
+        <input type="text" id="subject" placeholder="Subject" required>
+        <textarea id="body_text" placeholder="Message" rows="4" required></textarea>
+        <div class="loader" id="loader"></div>
+        <button onclick="sendEmail()">Send Email</button>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        function sendEmail() {
+            const receiver_email = document.getElementById("receiver_email").value;
+            const subject = document.getElementById("subject").value;
+            const body_text = document.getElementById("body_text").value;
+            const messageElement = document.getElementById("message");
+            const loader = document.getElementById("loader");
+
+            messageElement.innerText = "";
+            loader.style.display = "block";
+
+            fetch("http://localhost:3000/dev/send_email", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ receiver_email, subject, body_text })
+            })
+            .then(response => response.json())
+            .then(data => {
+                messageElement.innerText = data.message || data.error;
+            })
+            .catch(error => {
+                messageElement.innerText = "Error sending email";
+            })
+            .finally(() => {
+                loader.style.display = "none";
+            });
+        }
+    </script>
+</body>
+</html>

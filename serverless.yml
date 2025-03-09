@@ -1,0 +1,30 @@
+service: flask-email-service
+
+provider:
+  name: aws
+  runtime: python3.8
+  environment:
+    SMTP_HOST: smtp.gmail.com   # Replace with your SMTP provider
+    SMTP_PORT: 587
+    SMTP_USER: mahajannikhil0016@gmail.com
+    SMTP_PASS: ocml ivnh gwdr rswu
+
+plugins:
+  - serverless-wsgi
+  - serverless-python-requirements
+  - serverless-offline
+
+custom:
+  wsgi:
+    app: main.app
+  pythonRequirements:
+    dockerizePip: true
+
+functions:
+  api:
+    handler: wsgi.handler
+    timeout: 30
+    events:
+      - http:
+          path: send_email
+          method: post
