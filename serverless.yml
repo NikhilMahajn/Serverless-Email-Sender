@@ -4,7 +4,7 @@ provider:
   name: aws
   runtime: python3.8
   environment:
-    SMTP_HOST: smtp.gmail.com   # Replace with your SMTP provider
+    SMTP_HOST: smtp.gmail.com   
     SMTP_PORT: 587
     SMTP_USER: mahajannikhil0016@gmail.com
     SMTP_PASS: ocml ivnh gwdr rswu
